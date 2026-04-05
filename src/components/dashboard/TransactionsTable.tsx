@@ -199,76 +199,96 @@ export default function TransactionsTable({ onEdit }: { onEdit?: (id: string) =>
               )}
             </button>
 
-            {/* Date Range Dropdown */}
+            {/* Responsive Date Range Dropdown */}
             {isDateRangeOpen && (
-              <div className="absolute top-full right-0 mt-2 w-[480px] bg-card border border-border rounded-xl shadow-xl z-50 animate-in fade-in zoom-in duration-200">
-                <div className="p-4">
-                  {/* Quick Presets */}
-                  <div className="mb-4">
-                    <p className="text-xs font-semibold text-muted-foreground mb-2">Quick Select</p>
-                    <div className="flex flex-wrap gap-2">
-                      {getDatePresets().map((preset) => (
-                        <button
-                          key={preset.label}
-                          onClick={() => setDateRange(preset.from, preset.to)}
-                          className="px-3 py-1.5 text-xs bg-muted hover:bg-primary/10 rounded-lg transition-colors"
-                        >
-                          {preset.label}
-                        </button>
-                      ))}
+              <>
+                {/* Backdrop for mobile */}
+                <div 
+                  className="fixed inset-0 bg-black/50 z-40 sm:hidden"
+                  onClick={() => setIsDateRangeOpen(false)}
+                />
+                
+                {/* Dropdown - Full screen on mobile, positioned on desktop */}
+                <div className="fixed sm:absolute inset-x-0 bottom-0 sm:bottom-auto sm:inset-auto sm:top-full sm:left-auto sm:right-0 mt-0 sm:mt-2 w-full sm:w-[480px] bg-card border border-border rounded-t-2xl sm:rounded-xl shadow-xl z-50 animate-in slide-in-from-bottom sm:zoom-in-95 duration-200 max-h-[85vh] sm:max-h-[90vh] overflow-auto">
+                  <div className="p-4">
+                    {/* Header with close button for mobile */}
+                    <div className="flex items-center justify-between sm:hidden mb-4 pb-2 border-b border-border">
+                      <h4 className="font-semibold text-foreground text-base">Select Date Range</h4>
+                      <button
+                        onClick={() => setIsDateRangeOpen(false)}
+                        className="p-2 rounded-lg hover:bg-muted transition-colors"
+                      >
+                        <X size={20} />
+                      </button>
                     </div>
-                  </div>
 
-                  {/* Custom Range */}
-                  <div className="space-y-3">
-                    <p className="text-xs font-semibold text-muted-foreground">Custom Range</p>
-                    <div className="flex gap-3">
-                      <div className="flex-1">
-                        <label className="text-xs text-muted-foreground mb-1 block">Start Date</label>
-                        <div className="relative">
-                          <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                          <input
-                            type="date"
-                            value={filters.dateFrom}
-                            onChange={(e) => setFilter('dateFrom', e.target.value)}
-                            className="w-full pl-8 pr-3 py-2 text-sm bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
-                            max={filters.dateTo || undefined}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <label className="text-xs text-muted-foreground mb-1 block">End Date</label>
-                        <div className="relative">
-                          <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                          <input
-                            type="date"
-                            value={filters.dateTo}
-                            onChange={(e) => setFilter('dateTo', e.target.value)}
-                            className="w-full pl-8 pr-3 py-2 text-sm bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
-                            min={filters.dateFrom || undefined}
-                          />
-                        </div>
+                    {/* Quick Presets */}
+                    <div className="mb-4">
+                      <p className="text-xs font-semibold text-muted-foreground mb-2">Quick Select</p>
+                      <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+                        {getDatePresets().map((preset) => (
+                          <button
+                            key={preset.label}
+                            onClick={() => setDateRange(preset.from, preset.to)}
+                            className="px-3 py-2 text-xs bg-muted hover:bg-primary/10 rounded-lg transition-colors"
+                          >
+                            {preset.label}
+                          </button>
+                        ))}
                       </div>
                     </div>
-                  </div>
 
-                  {/* Actions */}
-                  <div className="flex justify-between gap-2 mt-4 pt-3 border-t border-border">
-                    <button
-                      onClick={clearDateFilter}
-                      className="px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      Clear
-                    </button>
-                    <button
-                      onClick={() => setIsDateRangeOpen(false)}
-                      className="px-3 py-1.5 text-xs bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-                    >
-                      Apply
-                    </button>
+                    {/* Custom Range */}
+                    <div className="space-y-3">
+                      <p className="text-xs font-semibold text-muted-foreground">Custom Range</p>
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <div className="flex-1">
+                          <label className="text-xs text-muted-foreground mb-1 block">Start Date</label>
+                          <div className="relative">
+                            <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                            <input
+                              type="date"
+                              value={filters.dateFrom}
+                              onChange={(e) => setFilter('dateFrom', e.target.value)}
+                              className="w-full pl-8 pr-3 py-2 text-sm bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                              max={filters.dateTo || undefined}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <label className="text-xs text-muted-foreground mb-1 block">End Date</label>
+                          <div className="relative">
+                            <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                            <input
+                              type="date"
+                              value={filters.dateTo}
+                              onChange={(e) => setFilter('dateTo', e.target.value)}
+                              className="w-full pl-8 pr-3 py-2 text-sm bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                              min={filters.dateFrom || undefined}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex justify-between gap-2 mt-4 pt-3 border-t border-border">
+                      <button
+                        onClick={clearDateFilter}
+                        className="px-3 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        Clear
+                      </button>
+                      <button
+                        onClick={() => setIsDateRangeOpen(false)}
+                        className="px-3 py-2 text-xs bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                      >
+                        Apply
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </>
             )}
           </div>
           
